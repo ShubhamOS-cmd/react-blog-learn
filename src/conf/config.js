@@ -6,6 +6,6 @@ const conf = {
     appwrite_DatabaseId : String(import.meta.env.VITE_APPWRITE_DATABASE_ID),
     
 }
-// this give gurantee that all values we get definetly a string
+// this give gurantee that all values we get definetly a string when we get key from .env
 // a good approach of production 
 export default conf 
