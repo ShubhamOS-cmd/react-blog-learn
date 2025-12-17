@@ -16,7 +16,12 @@ export class AuthService{ // Complete OOP's
     async createAccount({email , password , name}){
         try {
 
-          const userAccount =   await this.account.create(ID.unique() , email , password , name);
+          const userAccount =   await this.account.create({
+            userId: ID.unique(),
+            email: email,
+            password: password,
+            name: name,
+          });
           if(userAccount){
            // call Another method we want that if user account created then let him log in
             return this.login({email , password});
@@ -30,7 +35,10 @@ export class AuthService{ // Complete OOP's
     }
     async login({email ,password}){
         try {
-           return  await this.account.createEmailPasswordSession(email , password);
+           return  await this.account.createEmailPasswordSession({
+            email: email,
+            password: password,
+           });
         } catch (error) {
             throw error;
         }
