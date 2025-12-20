@@ -59,7 +59,7 @@ export class AuthService{ // Complete OOP's
         }
     }
 }
-
+// login , logout , getCurrentUser etc ...... these all are promises 
 const authService = new AuthService(); // we make object 
 
 export default authService; // we pass this object 
