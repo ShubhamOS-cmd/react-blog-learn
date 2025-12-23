@@ -1,14 +1,14 @@
 import React , {useState} from 'react'
-import {Link , matchPath, useNavigate} from 'react-router-dom'
+import {Link ,  useNavigate} from 'react-router-dom'
 import { login as authLogin } from '../store/authSlice'
 import {Button , Input , Logo} from './index'
 import { useDispatch } from 'react-redux'
 import authService from '../appwrite/auth'
-import { useForm } from 'react-hook-form'  // this is use for react hook form this react hook form is for mangement forms in recat applications
+import { useForm } from 'react-hook-form'  // this is use for react hook form this react hook form is for mangement forms in react applications
 function Login(){
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const {register , handleSubmit} = useForm();
+    const navigate = useNavigate(); // for navigate
+    const dispatch = useDispatch(); // for redux dispatch
+    const {register , handleSubmit} = useForm(); // react hook 
     // handleSubmit(keyword) is a method where we give our method that what we do after submit
     // register -> automatically pick all the data from form and what we give method in handleSubmit passes in that method it's make an object from the value
     const [error , setError] = useState("")
