@@ -6,6 +6,7 @@ import authService from './appwrite/auth'
 import {login , logout} from './store/authSlice'
 import Header from './components/header/Header'
 import Footer from './components/Footer/Footer'
+import { Outlet } from 'react-router-dom'
 function App() {
   //console.log(process.env.REACT_APP_APPWRITE); it's notr work beacuse we make our app by vite 
   // if we make app from create react then we used REACT_APP_.... for .env
@@ -38,7 +39,7 @@ function App() {
       <div className='w-full block'>
         <Header />
         <main>
-          {/* todo  <Outlet /> */} 
+          <Outlet />
         </main>
         <Footer />
       </div>
