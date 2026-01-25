@@ -22,7 +22,7 @@ export default function PostForm({post}){
       // control give the control of a form 
     // we can pass default values in form 
     const navigate = useNavigate();
-    const userData = useSelector(state => state.user.userData);
+    const userData = useSelector(state => state.auth.userData);
     // if user submit the form then what we do 
     // there is 2 cases
     // if post exists means we edit a existing post
@@ -46,18 +46,26 @@ export default function PostForm({post}){
            }
         }
         else{ // if not post then we do not have anything which we update so user want to create a form
+            
             const file = data.image[0] ? await appwriteService.uploadfile(data.image[0]) : null;
-
+            console.log("FILE DATA " + file);
+            console.log("USER DATA "+userData);
+            
             if(file){
                 const fileId = file.$id
                 data.featuredImage = fileId
                 const dbPost = await appwriteService.createPost({
                     ...data,
-                    userId: userData.$id,
+                    userid: userData.$id,
                 })
+                console.log("DB POST "+ dbPost);
+                
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`)
                 }
+            }
+            else{
+                console.log("Not respond");
             }
 
         }

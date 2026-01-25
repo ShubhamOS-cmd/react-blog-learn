@@ -34,7 +34,7 @@ function Login(){
                 bg-gray-100 rounded-xl p-10 border border-black/10'>
                     <div className='mb-2 flex justify-center'>
                         <span className='inline-block w-full max-w-[100px]'>
-                            <Logo width='100%' />
+                            <Logo className='w-full 200px' />
                         </span>
                     </div>
                     <h2 className='text-center text-2xl font-bold leading-tight'>Sign in to your account</h2>
@@ -62,7 +62,7 @@ function Login(){
                                     }
                                 })} // if we not write register then in another input form regisetr value is overwrite that why we use spread
                                 
-                            /> // this is our input component
+                            /> 
                             <Input 
                                 label="password : "
                                 type="password"
@@ -73,6 +73,7 @@ function Login(){
                             />
                             <Button
                                 type='submit'
+                                placeholder='Enter'
                                 className='w-full'
                             >Sign IN</Button>
                         </div>
