@@ -2,6 +2,7 @@
 if we remove our authentication system from backend service also our application is run continously .
 # Services 
 we export methods from services and whatever happend inside the services we dont' care 
+## Race condtion Avoiding 
 ``` js
 function App() {
 
@@ -73,3 +74,45 @@ function App() {
 
 export default App
 ```
+
+/**
+ * Race condition
+ * So we have a real scenario
+ * scenario is that 
+ * we have a input text field and when we type something on input field a api call is happen 
+ * so on every input word a api call is proceed 
+ * so that is race condition
+ * but we only intrested in the last api call 
+ * suppose we type Shubham
+ * so on s an api call we get response
+ * on sh an api call we get res
+ * on shu an api call we get res
+ * on shu an api call we get res
+ * 
+ * 
+ * 
+ * on shubham an api call we get res
+ * but on all these call we intreseted on the last api response
+ * but but on all these call our performance will kill our ui will fucking down 
+ * so that's race condition
+ *  This solution is for avoiding race condition
+ * axios have solution of this 
+ * axios uses controller = new AbortController() this cancel the older request by itself if the newer request is hit on the same url of the older request
+ * which is send with api call 
+ * means when we use axios.get(url , config)it also give config
+ * in config we send object {
+ *    signal : controller.signal
+ * }
+ * const response = await axios.get('/api/products?search='+search , {
+          signal: controller.signal
+    })
+ * all those req go to controller with their information
+ * so this cancel the older req if the newer req is hit on the same url 
+ * and it send those older req in catch block
+ * so i catch block we do this
+ * if(axios.isCancel(erro)){
+ * 
+ * }
+ * this code is for avoiding race condition and get response in sequence
+ * for cancel the older request we do debouncing 
+ */
