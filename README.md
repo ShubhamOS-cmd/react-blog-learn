@@ -93,7 +93,7 @@ export default App
  * 
  * on shubham an api call we get res
  * but on all these call we intreseted on the last api response
- * but but on all these call our performance will kill our ui will fucking down 
+ * but but on all these api call our performance will kill our ui will badly affected
  * so that's race condition
  *  This solution is for avoiding race condition
  * axios have solution of this 
@@ -103,16 +103,21 @@ export default App
  * in config we send object {
  *    signal : controller.signal
  * }
- * const response = await axios.get('/api/products?search='+search , {
+ ``` js
+const response = await axios.get('/api/products?search='+search , {
           signal: controller.signal
     })
+```
  * all those req go to controller with their information
  * so this cancel the older req if the newer req is hit on the same url 
  * and it send those older req in catch block
  * so i catch block we do this
- * if(axios.isCancel(erro)){
- * 
- * }
+  ``` js
+if(axios.isCancel(erro)){
+     console.log("Request cancelled " , error.message);
+          return
+  }
+```
  * this code is for avoiding race condition and get response in sequence
  * for cancel the older request we do debouncing 
  */
