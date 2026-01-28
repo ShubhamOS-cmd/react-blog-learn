@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { useDispatch } from 'react-redux'
 // dispatch is merger when we use redux with react
-import authService from './appwrite/auth'
+import {getCurrentUser} from './services/auth.services.js'
 import {login , logout} from './store/authSlice'
 import Header from './components/header/Header'
 import Footer from './components/Footer/Footer'
@@ -18,20 +18,26 @@ function App() {
   // we make loading state why -> beacuse our database is far from client so network request take time on this basis we do conditional rendering
   // so if loading is true loading icon otherwise data
 
-  const [loading , setloading] = useState(true)
-  const dispatch = useDispatch()
+  const [loading , setloading] = useState(true);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    authService.getCurrentUser() // is there a logged-in user?
-    .then((userData) => {
-      if(userData){
-        dispatch(login({userData})) // login action with user data 
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await getCurrentUser();
+        dispatch(login(res.data));
+      } catch (error) {
+        dispatch(logout());
       }
-      else{ // if we not get userdata then we call an activity by this atleast our state is update 
-        dispatch(logout()) // logout action 
+      finally{
+        setloading(false);
       }
-    })
-    .finally(() => setloading(false))
-  } , []) // empty dependecies means run once when your components mounts
+    }
+
+    fetchCurrentUser();
+    
+  } , []);
+  // empty dependecies means run once when your components mounts
   // assignment 
   return !loading ? (
     <div className='min-h-screen flex flex-wrap 
@@ -44,7 +50,7 @@ function App() {
         <Footer />
       </div>
     </div>
-  ) : null
+  ) : <div><h1>Loading blog ..... </h1></div>
 }
 
 export default App

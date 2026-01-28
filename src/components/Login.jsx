@@ -1,9 +1,10 @@
 import React , {useState} from 'react'
 import {Link ,  useNavigate} from 'react-router-dom'
+import {login as LOGIN , getCurrentUser} from '../services/auth.services.js'
 import { login as authLogin } from '../store/authSlice'
 import {Button , Input , Logo} from './index'
 import { useDispatch } from 'react-redux'
-import authService from '../appwrite/auth'
+
 import { useForm } from 'react-hook-form'  // this is use for react hook form this react hook form is for mangement forms in react applications
 function Login(){
     const navigate = useNavigate(); // for navigate
@@ -16,16 +17,15 @@ function Login(){
     const login = async(data) => {
         setError("") // when we start submission make error clean 
         try {
-            const session =   await authService.login(data); // in response we get a session 
-            if(session){ // if session -> logged in 
-                // then get userdata , userdata is get by getCurrentUser not by session
-                const userData = await authService.getCurrentUser();
+            const res =   await LOGIN(data); 
+            if(res){ 
+                const userData = await getCurrentUser();
                 if(userData) dispatch(authLogin(userData)) // if we get usedata then dispatch it 
                 navigate("/") // and then user is logged in send the user to root 
 
             }
         } catch (error) {
-            setError(error.message)
+            setError(err.response?.data?.message || err.message);
         }
     }
     return(
