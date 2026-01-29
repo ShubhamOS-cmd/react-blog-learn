@@ -17,15 +17,19 @@ function Login(){
     const login = async(data) => {
         setError("") // when we start submission make error clean 
         try {
+            console.log("Login data " , data);
+            
             const res =   await LOGIN(data); 
             if(res){ 
                 const userData = await getCurrentUser();
+                console.log("After login current user " , userData);
+                
                 if(userData) dispatch(authLogin(userData)) // if we get usedata then dispatch it 
                 navigate("/") // and then user is logged in send the user to root 
 
             }
         } catch (error) {
-            setError(err.response?.data?.message || err.message);
+            setError(error.response?.data?.message || error.message);
         }
     }
     return(

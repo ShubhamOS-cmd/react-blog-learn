@@ -24,8 +24,11 @@ function Signup(){
                 email ,
                 password,
             }
+            console.log("Data for login " , login_data);
             if(userdata){
                 const currentUserData = await LOGIN(login_data);
+                console.log(currentUserData);
+                
                 if(currentUserData) dispatch(login(currentUserData));
                 navigate("/");
             }
