@@ -1,14 +1,16 @@
 import React, {useEffect , useState} from "react";
-import appwriteService from '../appwrite/config'
+import {getPosts} from '../services/post.services.js'
 import { Container , PostCard } from "../components";
 function Home(){
     const[posts , setPosts] = useState([])
     useEffect(() => {
-        appwriteService.getPost().then((posts) => {
+        const fetchPosts = async () => {
+            const posts = await getPosts();
             if(posts){
-                setPosts(posts.documents)
+                setPosts(posts);
             }
-        })
+        }
+        fetchPosts();
     } , [])
     if(posts.length === 0){
         return <div className="w-full py-8 mt-4 text-center">
@@ -24,7 +26,7 @@ function Home(){
             <Container>
                 <div className="flex flex-wrap">
                     {posts.map((post) => (
-                        <div key={post.$id} className="p-2 w-1/4">
+                        <div key={post.slug} className="p-2 w-1/4">
                             <PostCard {...post}/>
                         </div>
                     ))}

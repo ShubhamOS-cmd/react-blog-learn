@@ -17,7 +17,7 @@ const createPost = async (data) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response_post;
+    return response_post.data;
 }
 const deletePost = async(slug) => {
     if(!slug){
@@ -35,15 +35,31 @@ const getPost = async(slug) => {
     }
     slug = slug.toLowerCase().trim();
     const response = await axios.get(`${conf.baseurl}/post/${slug}` , {withCredentials:true});
-    return response;
+    return response.data;
 }
 const getPosts = async() => {
     const response = await axios.get(`${conf.baseurl}/post/allposts`); // response is an array
-    return response;
+    return response.data;
+}
+const updatePost = async(data) => {
+    const {title , slug , content , featuredImage , status} = data;
+    if(!title || !slug || !content){
+        throw new Error("All fields are required");
+    }
+    const formData = new FormData();
+    formData.append("title" , title.toLowerCase().trim());
+    formData.append("content" , content.trim());
+    formData.append("status" , status);
+    if(featuredImage?.length > 0){
+        formData.append("featuredImage" , featuredImage[0]);
+    }
+    const updated_Post = await axios.patch(`${conf.baseurl}/post/${slug}` , formData , {withCredentials:true});
+    return updated_Post.data;
 }
 export {
     createPost,
     deletePost,
     getPost,
-
+    getPosts,
+    updatePost
 }

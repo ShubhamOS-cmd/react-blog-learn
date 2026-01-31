@@ -15,20 +15,15 @@ function Signup(){
     const CreateAccount = async(data) => {
         setError("")
         try {
-            console.log("Form data" , data);
-            
             const userdata = await signup(data);
-            console.log("SignUp data" , userdata);
             const {email , password} = data;
             const login_data = {
                 email ,
                 password,
             }
-            console.log("Data for login " , login_data);
             if(userdata){
                 const currentUserData = await LOGIN(login_data);
                 console.log(currentUserData);
-                
                 if(currentUserData) dispatch(login(currentUserData));
                 navigate("/");
             }
