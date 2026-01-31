@@ -17,7 +17,9 @@ const createPost = async (data) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response_post.data;
+    console.log("This is my response data after posting " , response_post.data);
+    
+    return response_post.data.data;
 }
 const deletePost = async(slug) => {
     if(!slug){
@@ -35,11 +37,17 @@ const getPost = async(slug) => {
     }
     slug = slug.toLowerCase().trim();
     const response = await axios.get(`${conf.baseurl}/post/${slug}` , {withCredentials:true});
-    return response.data;
+    console.log("This is my response data after get the post" , response.data);
+    
+    return response.data.data;
 }
 const getPosts = async() => {
     const response = await axios.get(`${conf.baseurl}/post/allposts`); // response is an array
-    return response.data;
+    console.log("This is my allposts data " , response);
+    console.log("This is my allposts data.data" , response.data);
+    console.log("This is my allposts data++ " , response.data.data);
+    
+    return response.data.data;
 }
 const updatePost = async(data) => {
     const {title , slug , content , featuredImage , status} = data;
@@ -50,7 +58,7 @@ const updatePost = async(data) => {
     formData.append("title" , title.toLowerCase().trim());
     formData.append("content" , content.trim());
     formData.append("status" , status);
-    if(featuredImage?.length > 0){
+    if(featuredImage && featuredImage?.length > 0){
         formData.append("featuredImage" , featuredImage[0]);
     }
     const updated_Post = await axios.patch(`${conf.baseurl}/post/${slug}` , formData , {withCredentials:true});

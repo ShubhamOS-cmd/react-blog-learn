@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Container , PostCard } from "../components";
 import {getPosts} from '../services/post.services.js'
 function AllPost(){
-    const [posts , setposts] = useState([]);
+    const [posts , setPosts] = useState([]);
     useEffect(() => {
         const fetchPosts = async () => {
-        const data = await getPosts();
-        setposts(data);
-        };
-    fetchPosts();
+                    const posts = await getPosts();
+                    if(posts){
+                        setPosts(posts);
+                    }
+        }
+        fetchPosts();
     } , [])
     return(
         <div className="w-full py-8">

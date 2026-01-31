@@ -5,10 +5,8 @@
 import React  , {useCallback}from "react";
 import { useForm } from "react-hook-form";
 import {Button , Input , Select , RTE} from './index'
-import appwriteService from '../appwrite/config';
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import {updatePost , createPost} from '../services/post.services.js'
 export default function PostForm({post}){
     const {register , handleSubmit ,watch , setValue , control , getValues} = useForm({
         defaultValues:{
@@ -22,52 +20,28 @@ export default function PostForm({post}){
       // control give the control of a form 
     // we can pass default values in form 
     const navigate = useNavigate();
-    const userData = useSelector(state => state.auth.userData);
     // if user submit the form then what we do 
     // there is 2 cases
     // if post exists means we edit a existing post
     // else we create a new post 
     const submit = async (data) => {
-        if(post){ // we go to edit if we have post 
-            // first handle the file 
-
-           const file =  data.image[0] ? appwriteService.uploadfile(data.image[0]): null;
-           if(file){ // if new file is upload then we delete old file 
-            appwriteService.deletefile(post.featuredImage)
-           } 
-
-           const dbPost = await appwriteService.updatePost(post.$id , {
-            ...data,
-            featuredImage: file ? file.$id : undefined
-           })
-
-           if(dbPost){
-            navigate(`/post/${dbPost.$id}`)
-           }
-        }
-        else{ // if not post then we do not have anything which we update so user want to create a form
-            
-            const file = data.image[0] ? await appwriteService.uploadfile(data.image[0]) : null;
-            console.log("FILE DATA " + file);
-            console.log("USER DATA "+userData);
-            
-            if(file){
-                const fileId = file.$id
-                data.featuredImage = fileId
-                const dbPost = await appwriteService.createPost({
-                    ...data,
-                    userid: userData.$id,
-                })
-                console.log("DB POST "+ dbPost);
-                
-                if(dbPost){
-                    navigate(`/post/${dbPost.$id}`)
-                }
+        try {
+            let dbPost ;
+            if(post){
+                dbPost = await updatePost({...data , slug:post.slug});
+                console.log(dbPost);
             }
             else{
-                console.log("Not respond");
+                dbPost = await createPost(data);
+                console.log("This is dbPost " , dbPost);
             }
-
+            if(dbPost){
+                console.log("This is my slug" , dbPost.slug);
+                
+                navigate(`/post/${dbPost.slug}`)
+            }
+        } catch (error) {
+            console.error("Post submit failed:", error);
         }
     }
     const slugTransform = useCallback((value) => {
@@ -84,7 +58,7 @@ export default function PostForm({post}){
     React.useEffect(() => {
         const subscription = watch((value , {name}) => {
             if(name === 'title'){
-                setValue('slug' , slugTransform(value.title , {shouldValidate: true}))
+                setValue('slug' , slugTransform(value.title) , {shouldValidate: true});
             } // in slug field we set value 
         })
 
@@ -101,6 +75,9 @@ export default function PostForm({post}){
             placeholder="Title"
             {...register("title" , {required:true})}
             />
+            {post ? (
+                <div>Slug cannot be changed after the post is published.</div>
+            ) : 
             <Input 
             label="Slug :"
             placeholder="Slug"
@@ -109,6 +86,7 @@ export default function PostForm({post}){
                 setValue("slug" , slugTransform(e.currentTarget.value),{shouldValidate:true});
             }}
             />
+            }
             <RTE 
             label="Content :"
             name="content"
@@ -122,12 +100,12 @@ export default function PostForm({post}){
             type="file"
             className="mb-4"
             accept="image/png, image/jpg, image/jpeg , image/gif"
-            {...register("image" , {required:!post})}
+            {...register("featuredImage" , {required:!post})}
             />
             {post && (
                 <div className="w-full mb-4">
                     <img 
-                    src={appwriteService.getfilePreview(post.featuredImage)}
+                    src={post.featuredImage}
                     alt={post.title}
                     className="rounded-lg"
                     />
