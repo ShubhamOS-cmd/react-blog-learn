@@ -24,7 +24,7 @@ const login = async (data) => {
         password,
     }
     const response = await axios.post(`${conf.baseurl}/user/login` , login_data , { withCredentials: true });
-    return response;
+    return response.data.data.user;
     // what is { withCredentials: true } it tells browser that includes the cookie in the request and accepts the cookie in that response
 
 }
@@ -34,7 +34,7 @@ const logout = async() => {
 }
 const getCurrentUser = async() => {
     const user = await axios.get(`${conf.baseurl}/user/current-User` ,  {withCredentials:true});
-    return user;
+    return user.data.data;
 } // axios .get only accepts 2 arguments
 
 const refreshUser = async() => {

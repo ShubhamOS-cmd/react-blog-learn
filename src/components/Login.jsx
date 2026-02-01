@@ -23,7 +23,13 @@ function Login(){
             if(res){ 
                 const userData = await getCurrentUser();
                 console.log("After login current user " , userData);
-                
+                // what the problem happen when login completed we get user data but inside the redux the value is store like in key value pair 
+                // and what response we get _id , name , email , and so on and we just store in redux 
+                // but in reducers in payload there is not a key like userdata 
+                // when we dispatch it from redux redux tell i have no key value pair of userData so it returns an undefined 
+                // solution is that store the data in object 
+                // payload give object which key is userdata so it store the data in redux
+                // and we easily get it 
                 if(userData) dispatch(authLogin(userData)) // if we get usedata then dispatch it 
                 navigate("/") // and then user is logged in send the user to root 
 

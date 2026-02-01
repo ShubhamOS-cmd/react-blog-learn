@@ -42,11 +42,7 @@ const getPost = async(slug) => {
     return response.data.data;
 }
 const getPosts = async() => {
-    const response = await axios.get(`${conf.baseurl}/post/allposts`); // response is an array
-    console.log("This is my allposts data " , response);
-    console.log("This is my allposts data.data" , response.data);
-    console.log("This is my allposts data++ " , response.data.data);
-    
+    const response = await axios.get(`${conf.baseurl}/post/allposts`); // response is an array    
     return response.data.data;
 }
 const updatePost = async(data) => {
