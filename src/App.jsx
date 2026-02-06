@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 // dispatch is merger when we use redux with react
 import {getCurrentUser} from './services/auth.services.js'
 import {login , logout} from './store/authSlice'
-import Header from './components/header/Header'
+import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import { Outlet } from 'react-router-dom'
 function App() {
